@@ -114,3 +114,73 @@ button:active {
     color: #aaaaaa;
     font-size: 14px;
 }
+
+#controls-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.controls-content {
+    background-color: #2a2a2a;
+    padding: 40px 50px;
+    border: 3px solid #790ECB;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 600px;
+}
+
+.controls-content h2 {
+    color: #790ECB;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.control-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.key-display {
+    background-color: #3a3a3a;
+    color: #790ECB;
+    padding: 15px 25px;
+    border: 2px solid #790ECB;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    min-width: 100px;
+    box-shadow: 0 4px 0 #5a0a9b;
+}
+
+.control-label {
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.help-hint {
+    color: #aaaaaa;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+#start-game-btn {
+    font-size: 20px;
+    padding: 15px 50px;
+}

@@ -1073,6 +1073,11 @@ function init() {
         if (e.key === 'p' || e.key === 'P') {
             togglePause();
         }
+        
+        // Toggle controls overlay with 'h' key
+        if (e.key === 'h' || e.key === 'H') {
+            toggleControlsOverlay();
+        }
     });
 
     document.addEventListener('keyup', (e) => {
@@ -1081,6 +1086,7 @@ function init() {
 
     document.getElementById('restart-btn').addEventListener('click', restart);
     document.getElementById('next-level-btn').addEventListener('click', restart);
+    document.getElementById('start-game-btn').addEventListener('click', startGame);
 
     // Update UI with initial scores
     updateScore();
@@ -1274,6 +1280,38 @@ function togglePause() {
     } else {
         AudioManager.resume();
         gameLoop(); // Resume game loop
+    }
+}
+
+// Toggle controls overlay
+function toggleControlsOverlay() {
+    const overlay = document.getElementById('controls-overlay');
+    const isHidden = overlay.classList.contains('hidden');
+    
+    if (isHidden) {
+        overlay.classList.remove('hidden');
+        game.paused = true;
+        AudioManager.pause();
+    } else {
+        overlay.classList.add('hidden');
+        game.paused = false;
+        AudioManager.resume();
+        if (!game.gameOver && !game.levelComplete) {
+            gameLoop();
+        }
+    }
+}
+
+// Start game (from initial controls screen)
+function startGame() {
+    const overlay = document.getElementById('controls-overlay');
+    overlay.classList.add('hidden');
+    game.paused = false;
+    
+    // Start music on game start
+    if (!game.musicStarted && !AudioManager.hasError) {
+        AudioManager.play();
+        game.musicStarted = true;
     }
 }
 
