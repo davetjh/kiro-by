@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0a0a0a;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+}
+
+#game-container {
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+}
+
+#gameCanvas {
+    display: block;
+    background-color: #1a1a1a;
+    border: 3px solid #790ECB;
+    width: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#ui {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background-color: #2a2a2a;
+    border: 2px solid #790ECB;
+    border-bottom: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#score, #lives {
+    color: #ffffff;
+}
+
+#power-indicator {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#current-power {
+    color: #790ECB;
+    padding: 2px 10px;
+    background-color: #3a3a3a;
+    border-radius: 4px;
+}
+
+#game-over, #level-complete {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(42, 42, 42, 0.95);
+    padding: 40px 60px;
+    border: 3px solid #790ECB;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 10;
+}
+
+#game-over h1, #level-complete h1 {
+    color: #790ECB;
+    margin-bottom: 20px;
+    font-size: 36px;
+}
+
+#game-over p, #level-complete p {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+button {
+    background-color: #790ECB;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #9a3ee0;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.hidden {
+    display: none !important;
+}
+
+#controls {
+    text-align: center;
+    padding: 10px;
+    background-color: #2a2a2a;
+    border: 2px solid #790ECB;
+    border-top: none;
+    color: #aaaaaa;
+    font-size: 14px;
+}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        button {
+            background: #790ECB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #9a3ee0;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            background: #3a3a3a;
+            border-radius: 4px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Audio System Test</h1>
+    
+    <div class="test-section">
+        <h2>AudioManager Status</h2>
+        <div class="status">
+            <p>Loaded: <span id="loaded-status" class="warning">Not initialized</span></p>
+            <p>Has Error: <span id="error-status" class="warning">Unknown</span></p>
+            <p>Audio Source: <span id="audio-src">background-music.mp3</span></p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Controls</h2>
+        <button onclick="testInit()">Initialize Audio</button>
+        <button onclick="testPlay()">Play Music</button>
+        <button onclick="testPause()">Pause Music</button>
+        <button onclick="testResume()">Resume Music</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Behavior</h2>
+        <ul>
+            <li>✅ Initialize should load the audio file (or show error if missing)</li>
+            <li>✅ Play should start the music (may require user interaction)</li>
+            <li>✅ Pause should stop the music at current position</li>
+            <li>✅ Resume should continue from where it was paused</li>
+            <li>✅ Music should loop seamlessly when it reaches the end</li>
+            <li>✅ Game should continue normally if audio file is missing</li>
+        </ul>
+    </div>
+
+    <script>
+        // Copy AudioManager from game.js
+        const AudioManager = {
+            bgMusic: null,
+            isLoaded: false,
+            hasError: false,
+            
+            init() {
+                try {
+                    this.bgMusic = new Audio();
+                    this.bgMusic.src = 'background-music.mp3';
+                    this.bgMusic.loop = true;
+                    this.bgMusic.volume = 0.5;
+                    
+                    this.bgMusic.addEventListener('canplaythrough', () => {
+                        this.isLoaded = true;
+                        updateStatus();
+                        logResult('✅ Audio loaded successfully', 'success');
+                    });
+                    
+                    this.bgMusic.addEventListener('error', (e) => {
+                        this.hasError = true;
+                        updateStatus();
+                        logResult('⚠️ Audio failed to load (expected if file is missing)', 'warning');
+                    });
+                    
+                    this.bgMusic.load();
+                    logResult('🔄 Audio initialization started', 'success');
+                } catch (e) {
+                    this.hasError = true;
+                    updateStatus();
+                    logResult('❌ Failed to initialize: ' + e.message, 'error');
+                }
+            },
+            
+            play() {
+                if (this.hasError || !this.bgMusic) {
+                    logResult('⚠️ Cannot play: Audio not available', 'warning');
+                    return;
+                }
+                
+                const playPromise = this.bgMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            logResult('✅ Music playing', 'success');
+                        })
+                        .catch(err => {
+                            logResult('⚠️ Autoplay blocked: ' + err.message, 'warning');
+                        });
+                }
+            },
+            
+            pause() {
+                if (this.hasError || !this.bgMusic) {
+                    logResult('⚠️ Cannot pause: Audio not available', 'warning');
+                    return;
+                }
+                
+                try {
+                    this.bgMusic.pause();
+                    logResult('✅ Music paused', 'success');
+                } catch (e) {
+                    logResult('❌ Failed to pause: ' + e.message, 'error');
+                }
+            },
+            
+            resume() {
+                if (this.hasError || !this.bgMusic) {
+                    logResult('⚠️ Cannot resume: Audio not available', 'warning');
+                    return;
+                }
+                
+                try {
+                    this.bgMusic.play()
+                        .then(() => {
+                            logResult('✅ Music resumed', 'success');
+                        })
+                        .catch(err => {
+                            logResult('❌ Failed to resume: ' + err.message, 'error');
+                        });
+                } catch (e) {
+                    logResult('❌ Failed to resume: ' + e.message, 'error');
+                }
+            }
+        };
+
+        function updateStatus() {
+            document.getElementById('loaded-status').textContent = AudioManager.isLoaded ? 'Yes' : 'No';
+            document.getElementById('loaded-status').className = AudioManager.isLoaded ? 'success' : 'warning';
+            
+            document.getElementById('error-status').textContent = AudioManager.hasError ? 'Yes' : 'No';
+            document.getElementById('error-status').className = AudioManager.hasError ? 'error' : 'success';
+        }
+
+        function logResult(message, type) {
+            const results = document.getElementById('test-results');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'status ' + type;
+            entry.textContent = `[${timestamp}] ${message}`;
+            results.insertBefore(entry, results.firstChild);
+        }
+
+        function testInit() {
+            AudioManager.init();
+            updateStatus();
+        }
+
+        function testPlay() {
+            AudioManager.play();
+        }
+
+        function testPause() {
+            AudioManager.pause();
+        }
+
+        function testResume() {
+            AudioManager.resume();
+        }
+
+        // Auto-initialize on page load
+        window.addEventListener('load', () => {
+            logResult('📄 Test page loaded. Click "Initialize Audio" to begin.', 'success');
+        });
+    </script>
+</body>
+</html>
